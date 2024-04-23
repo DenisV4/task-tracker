@@ -6,6 +6,7 @@ import com.example.tasktracker.web.dto.UserResponse;
 import com.example.tasktracker.web.dto.UserUpsertRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,12 +19,14 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     public Flux<UserResponse> getAll() {
         return userService.findAll()
                 .map(userMapper::userToResponse);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     public Mono<UserResponse> get(@PathVariable String id) {
         return userService.findById(id)
                 .map(userMapper::userToResponse);
@@ -37,13 +40,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     public Mono<UserResponse> update(@PathVariable String id, @RequestBody UserUpsertRequest request) {
         return userService.update(userMapper.requestToUser(id, request))
                 .map(userMapper::userToResponse);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('USER', 'MANAGER')")
     public Mono<Void> delete(@PathVariable String id) {
         return userService.deleteById(id);
     }

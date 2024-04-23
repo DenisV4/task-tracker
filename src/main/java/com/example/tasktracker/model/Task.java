@@ -40,6 +40,7 @@ public class Task {
 
     private String assigneeId;
 
+    @Builder.Default
     private Set<String> observerIds = new HashSet<>();
 
     @ReadOnlyProperty
@@ -49,6 +50,7 @@ public class Task {
     private User assignee;
 
     @ReadOnlyProperty
+    @Builder.Default
     private Set<User> observers = new HashSet<>();
 
     public enum TaskStatus {

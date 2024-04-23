@@ -11,7 +11,10 @@ public interface UserService {
     Flux<User> findAll();
 
     Flux<User> findByIdIn(Collection<String> ids);
+
     Mono<User> findById(String id);
+
+    Mono<User> findByUsername(String username);
 
     Mono<User> save(User user);
 
